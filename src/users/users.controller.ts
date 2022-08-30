@@ -11,8 +11,6 @@ import {
 import { UsersService } from './users.service';
 
 import { UsersDTO } from './users.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UsersEntity } from './users.entity';
 
 
 @Controller('users')
