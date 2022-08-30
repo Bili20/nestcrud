@@ -1,6 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToOne, JoinColumn} from 'typeorm'
 import * as crypto from 'crypto'
-import { AdminEntity } from 'src/admin_user/admin.entity'
 
 @Entity('users')
 export class UsersEntity {
@@ -19,8 +18,4 @@ export class UsersEntity {
     }
     @Column()
     password: string
-
-    @OneToOne(() => AdminEntity)
-    @JoinColumn()
-    admin: AdminEntity
 }
