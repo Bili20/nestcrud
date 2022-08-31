@@ -9,7 +9,6 @@ import {
     Put
   } from '@nestjs/common';
 import { UsersService } from './users.service';
-
 import { UsersDTO } from './users.dto';
 
 
@@ -32,10 +31,10 @@ export class UsersController {
     @Post()
     async createUser(@Body() data: UsersDTO){
         const user = await this.userService.create(data)
+
         return{ 
-            statusCode: HttpStatus.CREATED,
-            message: 'user criado com sucesso',
-            user,
+            statusCode: HttpStatus.OK,
+            messsage: 'User criado'
         }
     }
 
@@ -57,10 +56,10 @@ export class UsersController {
     @Put(':id')
     async updateUser(@Param('id') id:number, @Body() data: Partial<UsersDTO>){
         const user = await this.userService.update(id, data)
-        if(user === null){
+        if(!user){
             return {
                 statusCode: HttpStatus.NOT_FOUND,
-                message: 'user atualizado'
+                message: 'user não encontrado'
             }
         }
         return{

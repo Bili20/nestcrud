@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from './users.entity';
 import { Repository } from 'typeorm';
@@ -21,14 +21,6 @@ export class UsersService {
         const user = this.userRepository.create(data)
         await this.userRepository.save(data)
         return user
-    }
-
-    async findByEmail(email: string): Promise<UsersDTO>{
-        return await this.userRepository.findOne({
-            where: {
-                email: email
-            }
-        })
     }
 
    async read(id: number){

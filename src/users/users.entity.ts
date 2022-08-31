@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToOne, JoinColumn} from 'typeorm'
-import * as crypto from 'crypto'
+import * as crypto from 'crypto' 
 
 @Entity('users')
 export class UsersEntity {
@@ -18,4 +18,5 @@ export class UsersEntity {
     }
     @Column()
     password: string
+
 }

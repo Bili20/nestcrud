@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -8,4 +9,7 @@ export class AdminEntity {
 
     @Column()
     description: string
+
+    
+
 }
