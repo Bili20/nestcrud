@@ -14,8 +14,9 @@ export class UsersEntity {
 
     @BeforeInsert()
     hashPassword(){
-        this.password = crypto.createHmac('sha256', this.password).digest('hex')
+    this.password = crypto.createHmac('sha256', this.password).digest('hex')
     }
+    
     @Column()
     password: string
 

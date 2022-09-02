@@ -17,9 +17,8 @@ export class UsersService {
         return await this.userRepository.find()
     }
 
-    async create(data: UsersDTO) {
-        const user = this.userRepository.create(data)
-        await this.userRepository.save(data)
+    async create(data: UsersDTO): Promise<UsersEntity>{
+        const user = await this.userRepository.save(data)
         return user
     }
 
@@ -28,12 +27,13 @@ export class UsersService {
    }
 
    async update(id: number, data: Partial<UsersDTO>){
-        await this.userRepository.update({id}, data)
-        return await this.userRepository.findOne({where: {id: id}})
+        await this.userRepository.findOne({where: {id: id}}) 
+        return await this.userRepository.update({id}, data)
    }
 
    async destroy (id: number){
+        const data = await this.userRepository.findOne({where: {id}})
         await this.userRepository.delete({id})
-        return {deleted: true}
+        return data
    }
 }

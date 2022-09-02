@@ -3,13 +3,18 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
+    HttpException,
     HttpStatus,
+    NotFoundException,
     Param,
     Post,
-    Put
+    Put,
+    ValidationPipe
   } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
+import { response } from 'express';
 
 
 @Controller('users')
@@ -28,28 +33,21 @@ export class UsersController {
         }
     }
 
+    @HttpCode(201)
     @Post()
-    async createUser(@Body() data: UsersDTO){
+    async createUser(@Body(ValidationPipe) data: UsersDTO){
         const user = await this.userService.create(data)
-
-        return{ 
-            statusCode: HttpStatus.OK,
-            messsage: 'User criado'
-        }
+        return user;
     }
 
     @Get(':id')
     async readUser(@Param('id') id: number){
         const data = await this.userService.read(id)
-        if(data === null){
-            return {
-                statusCode: HttpStatus.NOT_FOUND,
-                message: "user não existe"
-            }
+        if(!data){
+            // throw new HttpException('Not', HttpStatus.NOT_FOUND);
+            throw new NotFoundException();
         }
         return{
-            statusCode: HttpStatus.OK,
-            message: 'user buscado com sucesso!!',
             data,
         }
     }
@@ -57,23 +55,22 @@ export class UsersController {
     async updateUser(@Param('id') id:number, @Body() data: Partial<UsersDTO>){
         const user = await this.userService.update(id, data)
         if(!user){
-            return {
-                statusCode: HttpStatus.NOT_FOUND,
-                message: 'user não encontrado'
-            }
+            throw new NotFoundException()
         }
         return{
-            statusCode: HttpStatus.OK,
             message: 'user atualizado',
         }
     }
     
     @Delete(':id')
     async deleteUser(@Param('id') id: number){
-        await this.userService.destroy(id)
+       const data =  await this.userService.destroy(id)
+        if(!data){
+            throw new NotFoundException()
+        }
         return{
-            statusCode: HttpStatus.OK,
             message: 'user deletado',
+            data
         }
     }
 }
