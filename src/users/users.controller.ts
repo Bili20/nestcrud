@@ -4,7 +4,6 @@ import {
     Delete,
     Get,
     HttpCode,
-    HttpException,
     HttpStatus,
     NotFoundException,
     Param,
@@ -14,7 +13,6 @@ import {
   } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
-import { response } from 'express';
 
 
 @Controller('users')
@@ -44,7 +42,6 @@ export class UsersController {
     async readUser(@Param('id') id: number){
         const data = await this.userService.read(id)
         if(!data){
-            // throw new HttpException('Not', HttpStatus.NOT_FOUND);
             throw new NotFoundException();
         }
         return{
@@ -52,14 +49,15 @@ export class UsersController {
         }
     }
     @Put(':id')
-    async updateUser(@Param('id') id:number, @Body() data: Partial<UsersDTO>){
-        const user = await this.userService.update(id, data)
-        if(!user){
-            throw new NotFoundException()
-        }
-        return{
-            message: 'user atualizado',
-        }
+    async updateUser(@Param('id') id:number, @Body(ValidationPipe) data: UsersDTO){
+        // if(!data){
+        //     throw new NotFoundException()
+        // }
+        // await this.userService.update(id, data)
+        // return{
+        //     message: 'user atualizado',
+        //     data
+        // }
     }
     
     @Delete(':id')

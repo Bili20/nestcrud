@@ -1,5 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToOne, JoinColumn} from 'typeorm'
-import * as crypto from 'crypto' 
+import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToOne, JoinColumn, Admin} from 'typeorm'
+import { AdminEntity } from './admins.entity'
 
 @Entity('users')
 export class UsersEntity {
@@ -11,13 +11,10 @@ export class UsersEntity {
 
     @Column()
     email: string
-
-    @BeforeInsert()
-    hashPassword(){
-    this.password = crypto.createHmac('sha256', this.password).digest('hex')
-    }
     
     @Column()
     password: string
 
+    @OneToOne(() => AdminEntity, (admin) => admin.user)
+    admin: AdminEntity
 }
