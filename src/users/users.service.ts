@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { UsersDTO } from './users.dto';
 import { AdminEntity } from './admins.entity';
+import { UpdateUsersDTO } from './user.update.dto';
 
 
 @Injectable()
@@ -38,9 +39,22 @@ export class UsersService {
         return await this.userRepository.findOne({where: {id: id}})
    }
 
-   async update(id: number, data: Partial <UsersDTO>){
-        const user = await this.userRepository.findOne({where: {id: id}}) 
-        //return await this.userRepository.update({id}, data)
+   async update(id: number, data: UpdateUsersDTO){
+        const user = await this.userRepository.findOne({where: {id: id}, relations: { admin: true }}) 
+
+        user.name  = data.name ?? user.name;
+        user.password  = data.password ?? user.password;
+        user.email  = data.email ?? user.email;
+        
+        await this.userRepository.save(user);
+
+        if(user.admin != data){
+            const adm = await this.adminRepository.findOne({where:{id}})
+            await this.adminRepository.delete({user})
+            return adm
+        }
+
+        return user;
    }
 
    async destroy (id: number){

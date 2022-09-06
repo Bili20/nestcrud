@@ -13,6 +13,7 @@ import {
   } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
+import { UpdateUsersDTO } from './user.update.dto';
 
 
 @Controller('users')
@@ -25,7 +26,6 @@ export class UsersController {
     async showAllUsers(){
         const users = await this.userService.showAll()
         return {
-            statusCode: HttpStatus.OK,
             message: 'users buscado com sucesso!!',
             users,
         }
@@ -49,15 +49,13 @@ export class UsersController {
         }
     }
     @Put(':id')
-    async updateUser(@Param('id') id:number, @Body(ValidationPipe) data: UsersDTO){
-        // if(!data){
-        //     throw new NotFoundException()
-        // }
-        // await this.userService.update(id, data)
-        // return{
-        //     message: 'user atualizado',
-        //     data
-        // }
+    async updateUser(@Param('id') id:number, @Body(ValidationPipe) data: UpdateUsersDTO){
+        if(!data){
+             throw new NotFoundException()
+        }
+        await this.userService.update(id, data)
+        return data
+         
     }
     
     @Delete(':id')
