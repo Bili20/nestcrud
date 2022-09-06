@@ -49,11 +49,11 @@ export class UsersService {
         
         await this.userRepository.save(user);
 
-        if(user.admin == null && data.admin==true){
+        if(user.admin == null && data.admin == true){
 
             await this.adminRepository.save({user})
 
-        }else if (user.admin && data.admin==false){
+        }else if (user.admin && data.admin == false){
 
             await this.adminRepository.findOne({where:{id}})
             await this.adminRepository.delete({user})

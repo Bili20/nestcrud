@@ -9,7 +9,6 @@ import {
     Param,
     Post,
     Put,
-    ValidationPipe
   } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
@@ -33,7 +32,7 @@ export class UsersController {
 
     @HttpCode(201)
     @Post()
-    async createUser(@Body(ValidationPipe) data: UsersDTO){
+    async createUser(@Body() data: UsersDTO){
         const user = await this.userService.create(data)
         return user;
     }
@@ -49,13 +48,12 @@ export class UsersController {
         }
     }
     @Put(':id')
-    async updateUser(@Param('id') id:number, @Body(ValidationPipe) data: UpdateUsersDTO){
+    async updateUser(@Param('id') id:number, @Body() data: UpdateUsersDTO){
         if(!data){
              throw new NotFoundException()
         }
         let user = await this.userService.update(id, data)
-        return user
-         
+        return user 
     }
     
     @Delete(':id')
