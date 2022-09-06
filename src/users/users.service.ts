@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {UsersEntity} from './users.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt'
 
 import { UsersDTO } from './users.dto';
 import { AdminEntity } from './admins.entity';
@@ -30,7 +31,7 @@ export class UsersService {
         const user = await this.userRepository.save({ "name" : data.name, "password" : data.password, "email" : data.email})
 
         if (data.admin) {
-            const adminUser = await this.adminRepository.save({ "user" : user });
+            await this.adminRepository.save({ "user" : user });
         }
         return user
     }
@@ -48,10 +49,14 @@ export class UsersService {
         
         await this.userRepository.save(user);
 
-        if(user.admin != data){
-            const adm = await this.adminRepository.findOne({where:{id}})
+        if(user.admin == null && data.admin==true){
+
+            await this.adminRepository.save({user})
+
+        }else if (user.admin && data.admin==false){
+
+            await this.adminRepository.findOne({where:{id}})
             await this.adminRepository.delete({user})
-            return adm
         }
 
         return user;

@@ -53,8 +53,8 @@ export class UsersController {
         if(!data){
              throw new NotFoundException()
         }
-        await this.userService.update(id, data)
-        return data
+        let user = await this.userService.update(id, data)
+        return user
          
     }
     
